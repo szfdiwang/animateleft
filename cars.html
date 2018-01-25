@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>cars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        *{
+           margin: 0;
+           padding: 0;
+           text-decoration: none; 
+        }
+        .container{
+            width: 950px;
+            height: 594px;
+            border: 3px solid #333333;
+            overflow: hidden;
+            position: relative;
+        }
+        .list{
+            width: 6650px;
+            height: 594px;
+            position: absolute;
+            z-index: 1;
+        }
+        .list img{
+            float: left;
+        }
+        .buttons{
+            position: absolute;
+            height: 10px;
+            width: 120px;
+            z-index: 2;
+            bottom: 20px;
+            left: 750px;
+        }
+        .buttons span{
+            cursor: pointer;
+            float: left;
+            border: 1px solid #fff;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333333;
+            margin-right: 5px;
+        }
+        .buttons .on{
+            background-color: aqua;
+        }
+        .arrow{
+            cursor: pointer;
+            display: none;
+            line-height: 39px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            z-index: 2;
+            top: 180px;
+            background-color: rgba(247, 240, 240, 0.3);
+            color: #fff;
+        }
+        .arrow:hover{
+            background-color: rgba(247, 240, 240, 0.7);
+        }
+        .container:hover .arrow{
+            display: block;
+        }
+        #prev{
+            left: 20px;
+        }
+        #next{
+            right: 20px;
+        }
+    </style>
+   
+</head>
+<body>
+    <div class="container">
+        <div class="list" style="left:-950px">
+            <img src="./img/5.jpg" alt="5"/>
+            <img src="./img/1.jpg" alt="1"/>
+            <img src="./img/2.jpg" alt="2"/>
+            <img src="./img/3.jpg" alt="3"/>
+            <img src="./img/4.jpg" alt="4"/>
+            <img src="./img/5.jpg" alt="5"/>
+            <img src="./img/1.jpg" alt="1"/>
+        </div>
+        <div class="buttons">
+            <span index="1" class="on"></span>
+            <span index="2"></span>
+            <span index="3"></span>
+            <span index="4"></span>
+            <span index="5"></span>
+        </div>
+        <a href="javascript:;" class="arrow" id="prev">&lt;</a>
+        <a href="javascript:;" class="arrow" id="next">&gt;</a>
+    </div>
+    <script>
+            var container = $('.container');
+            var list = $('.list');
+            var buttons =$('.buttons span');
+            var prev = $('#prev');
+            var next = $('#next');
+            // console.log(container);
+            // console.log(list);
+            // console.log(buttons);
+            // console.log(prev);
+            // console.log(next);
+            var left = parseInt(list.css('left'));
+            next.click(function(){
+                animate(-950)
+            })
+            prev.click(function(){
+                animate(950)
+            })
+            function animate (offset){
+                left+=offset;
+                list.animate({'left':left});
+                if(left>-950 ){
+                    left=-4750;
+                    list.css('left',left);
+                }
+                if(left<-4750){
+                    left=-950;
+                    list.css('left',left);
+                }
+            }
+            
+    </script>
+</body>
+</html>
