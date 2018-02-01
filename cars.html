@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,28 +8,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <style>
-        *{
-           margin: 0;
-           padding: 0;
-           text-decoration: none; 
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
         }
-        .container{
+
+        .container {
             width: 950px;
             height: 594px;
             border: 3px solid #333333;
             overflow: hidden;
             position: relative;
         }
-        .list{
+
+        .list {
             width: 6650px;
             height: 594px;
             position: absolute;
             z-index: 1;
         }
-        .list img{
+
+        .list img {
             float: left;
         }
-        .buttons{
+
+        .buttons {
             position: absolute;
             height: 10px;
             width: 120px;
@@ -36,7 +41,8 @@
             bottom: 20px;
             left: 750px;
         }
-        .buttons span{
+
+        .buttons span {
             cursor: pointer;
             float: left;
             border: 1px solid #fff;
@@ -46,10 +52,12 @@
             background: #333333;
             margin-right: 5px;
         }
-        .buttons .on{
+
+        .buttons .on {
             background-color: aqua;
         }
-        .arrow{
+
+        .arrow {
             cursor: pointer;
             display: none;
             line-height: 39px;
@@ -64,31 +72,36 @@
             background-color: rgba(247, 240, 240, 0.3);
             color: #fff;
         }
-        .arrow:hover{
+
+        .arrow:hover {
             background-color: rgba(247, 240, 240, 0.7);
         }
-        .container:hover .arrow{
+
+        .container:hover .arrow {
             display: block;
         }
-        #prev{
+
+        #prev {
             left: 20px;
         }
-        #next{
+
+        #next {
             right: 20px;
         }
     </style>
-   
+
 </head>
+
 <body>
     <div class="container">
         <div class="list" style="left:-950px">
-            <img src="./img/5.jpg" alt="5"/>
-            <img src="./img/1.jpg" alt="1"/>
-            <img src="./img/2.jpg" alt="2"/>
-            <img src="./img/3.jpg" alt="3"/>
-            <img src="./img/4.jpg" alt="4"/>
-            <img src="./img/5.jpg" alt="5"/>
-            <img src="./img/1.jpg" alt="1"/>
+            <img src="./img/5.jpg" alt="5" />
+            <img src="./img/1.jpg" alt="1" />
+            <img src="./img/2.jpg" alt="2" />
+            <img src="./img/3.jpg" alt="3" />
+            <img src="./img/4.jpg" alt="4" />
+            <img src="./img/5.jpg" alt="5" />
+            <img src="./img/1.jpg" alt="1" />
         </div>
         <div class="buttons">
             <span index="1" class="on"></span>
@@ -101,36 +114,101 @@
         <a href="javascript:;" class="arrow" id="next">&gt;</a>
     </div>
     <script>
-            var container = $('.container');
-            var list = $('.list');
-            var buttons =$('.buttons span');
-            var prev = $('#prev');
-            var next = $('#next');
-            // console.log(container);
-            // console.log(list);
-            // console.log(buttons);
-            // console.log(prev);
-            // console.log(next);
-            var left = parseInt(list.css('left'));
-            next.click(function(){
-                animate(-950)
-            })
-            prev.click(function(){
-                animate(950)
-            })
-            function animate (offset){
-                left+=offset;
-                list.animate({'left':left});
-                if(left>-950 ){
-                    left=-4750;
-                    list.css('left',left);
+        var container = $('.container');
+        var list = $('.list');
+        var buttons = $('.buttons span');
+        var prev = $('#prev');
+        var next = $('#next');
+        var index = 1;
+        var animated = false;
+        var timer;
+        for (var num = 0; num < buttons.length; num++) {
+
+            buttons[num].onclick = function () {
+                if (this.className == "on") {
+                    return;
                 }
-                if(left<-4750){
-                    left=-950;
-                    list.css('left',left);
+                var myindex = parseInt(this.getAttribute('index'));
+                var offset = -950 * (myindex - index);
+                if (!animated) {
+                    animate(offset)
+                }
+                index = myindex;
+                showButton();
+            }
+
+        }
+        console.log(buttons);
+        function play(){
+            timer =setInterval(function(){
+                next.click();
+            },500);
+        }
+        function stop(){
+            clearInterval(timer);
+        }
+        function showButton() {
+            buttons.eq(index - 1).addClass('on').siblings().removeClass('on');
+        }
+        var left = parseInt(list.css('left'));
+        next.click(function () {
+            if (index == 5) {
+                index = 1;
+            } else {
+                index += 1;
+            }
+            showButton();
+            if (!animated) {
+                animate(-950)
+            }
+        })
+        prev.click(function () {
+            if (index == 1) {
+                index = 5;
+            } else {
+                index -= 1;
+            }
+            showButton();
+            if (!animated) {
+                animate(950)
+            }
+
+        })
+
+        function animate(offset) {
+            var time = 300; //位移时间
+            var interval = 10; //位移间隔时间
+            var speed = offset / (time / interval); //每次位移量
+            var newLeft = parseInt(list.css('left')) + offset;
+
+            function go() {
+                animated = true;
+                if ((speed < 0 && parseInt(list.css('left')) > newLeft) || (speed > 0 && parseInt(list.css('left')) <
+                        newLeft)) {
+                    list.css('left', parseInt(list.css('left')) + speed);
+                    setTimeout(go, interval);
+                } else {
+                    animated = false;
+                    list.css(
+                        'left', newLeft
+                    );
+                    if (newLeft > -950) {
+                        left = -4750;
+                        list.css('left', left);
+                    }
+                    if (newLeft < -4750) {
+                        left = -950;
+                        list.css('left', left);
+                    }
                 }
             }
-            
+            go();
+
+        }
+        container.on("mouseover",stop);
+        container.on("mouseout",play);
+        play();
     </script>
 </body>
+
 </html>
